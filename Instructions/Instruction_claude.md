@@ -3,9 +3,11 @@
 **Course:** Machine Learning (ML) — Instructor: Roky Sir
 
 ## 1. Objective
+
 Find the **global minimum of the 2D Ackley function** using a **Genetic Algorithm (GA)**.
 
 ## 2. Group & Submission Logistics
+
 - Groups of **5 students**, **8 minutes** per group
 - **24 groups total**, spread across **4 classes**
 - Deadline: to be fixed by each group themselves
@@ -30,10 +32,10 @@ f(x₁, x₂) = −a·exp(−b·√(0.5·(x₁² + x₂²))) − exp(0.5·(cos(c
 **Recommended parameters:**
 
 | Parameter | Value |
-|---|---|
-| a | 20 |
-| b | 0.2 |
-| c | 2π |
+| --------- | ----- |
+| a         | 20    |
+| b         | 0.2   |
+| c         | 2π    |
 
 With these values, the function becomes:
 
@@ -48,22 +50,23 @@ f(x₁, x₂) = −20·exp(−0.2·√(0.5·(x₁² + x₂²))) − exp(0.5·(co
 > A classical solver isn't needed — the GA should discover this minimum on its own. A result **close to zero** (the closer, the more accurate) counts as correct convergence.
 
 ## 4. Chromosome Encoding
+
 - **Genes:** 2 → `[x₁, x₂]`
 - **Encoding type:** Value (real-number) encoding
 - Each gene initialized within **[-5, 5]**
 
 ## 5. GA Settings (recommended — adjustable)
 
-| Setting | Value |
-|---|---|
-| Population size | 50 |
-| Number of generations | 100 (or run until convergence) — used as stopping criterion |
-| Crossover probability (Pc) | 80% |
-| Mutation probability (Pm) | 5% |
-| Elitism | Yes — top 1 individual (best fitness) carried over unchanged each generation |
-| Selection method | Roulette Wheel |
-| Crossover method | 1-point crossover |
-| Mutation method | 1-point gene mutation — pick one of the two genes and slightly perturb its value (e.g. a Gaussian-distributed random delta), keeping it within [-5, 5] |
+| Setting                    | Value                                                                                                                                                  |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Population size            | 50                                                                                                                                                     |
+| Number of generations      | 100 (or run until convergence) — used as stopping criterion                                                                                            |
+| Crossover probability (Pc) | 80%                                                                                                                                                    |
+| Mutation probability (Pm)  | 5%                                                                                                                                                     |
+| Elitism                    | Yes — top 1 individual (best fitness) carried over unchanged each generation                                                                           |
+| Selection method           | Roulette Wheel                                                                                                                                         |
+| Crossover method           | 1-point crossover                                                                                                                                      |
+| Mutation method            | 1-point gene mutation — pick one of the two genes and slightly perturb its value (e.g. a Gaussian-distributed random delta), keeping it within [-5, 5] |
 
 ## 6. Algorithm Outline
 
@@ -83,6 +86,7 @@ f(x₁, x₂) = −20·exp(−0.2·√(0.5·(x₁² + x₂²))) − exp(0.5·(co
 `[-1.5, -1.0]` → mutate one gene by a small delta → `[-1.0, -1.0]` (new solution)
 
 ## 7. Deliverables Checklist
+
 - [ ] Working GA implementation (code)
 - [ ] Output showing convergence toward `f(0, 0) ≈ 0`
 - [ ] Clear understanding of each GA step (selection, crossover, mutation, elitism) — may be tested via exam questions
