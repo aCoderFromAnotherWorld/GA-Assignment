@@ -6,7 +6,17 @@ Genetic Algorithm (GA) implementation that finds the **global minimum of the 2D 
 
 Minimize the 2D Ackley function:
 
-```
+$$
+f(x_1, x_2)
+=
+-a \exp\left(-b\sqrt{0.5\left(x_1^2+x_2^2\right)}\right)
+-
+\exp\left(0.5\left(\cos(cx_1)+\cos(cx_2)\right)\right)
++
+a+\exp(1)
+$$
+
+```py
 f(x1, x2) = -a * exp(-b * sqrt(0.5 * (x1^2 + x2^2))) - exp(0.5 * (cos(c*x1) + cos(c*x2))) + a + exp(1)
 ```
 
