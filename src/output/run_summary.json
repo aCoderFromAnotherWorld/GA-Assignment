@@ -1,0 +1,52 @@
+{
+  "ga_settings": {
+    "population_size": 50,
+    "generations": 100,
+    "crossover_probability": 0.8,
+    "mutation_probability": 0.05,
+    "elitism": 1,
+    "selection": "Roulette Wheel",
+    "crossover": "1-point",
+    "mutation": "1-point Gaussian gene mutation",
+    "bounds": [
+      -5.0,
+      5.0
+    ]
+  },
+  "ga_result": {
+    "best_chromosome": [
+      -0.0018468201023286307,
+      0.004958947112135738
+    ],
+    "best_fitness": 0.015712625676908676,
+    "generations_run": 100,
+    "converged": false
+  },
+  "classical_comparison": {
+    "start": [
+      4.0,
+      -4.0
+    ],
+    "x_star": [
+      3.983078761573619,
+      -3.983104339878673
+    ],
+    "f_star": 10.998262141050068
+  },
+  "reduced_generation_runs": {
+    "20": {
+      "best_fitness": 0.0659813297404388,
+      "best_chromosome": [
+        -0.0018468201023286307,
+        0.019602851677454458
+      ]
+    },
+    "25": {
+      "best_fitness": 0.0659813297404388,
+      "best_chromosome": [
+        -0.0018468201023286307,
+        0.019602851677454458
+      ]
+    }
+  }
+}
