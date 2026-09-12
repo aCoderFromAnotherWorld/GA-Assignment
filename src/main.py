@@ -11,8 +11,8 @@ GA run (20/25 generations) for reference.
 
 import json
 import os
-from pathlib import Path
 import webbrowser
+from pathlib import Path
 
 import matplotlib
 import matplotlib.pyplot as plt
