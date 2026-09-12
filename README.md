@@ -41,11 +41,20 @@ GA-Assignment/
     ├── genetic_algorithm.py       # GA engine: selection, crossover, mutation, elitism
     ├── main.py                    # Runs the GA, saves plots + a JSON run summary
     ├── test_ga.py                 # Unit tests (pytest)
+    ├── generate_detailed_report.py # Full per-generation tables + plots + GIF (for presenting to the instructor)
     ├── requirements.txt
-    └── output/                    # Generated on each run
-        ├── convergence_curve.png
-        ├── ackley_surface_solution.png
-        └── run_summary.json
+    └── output/
+        ├── convergence_curve.png       # from main.py
+        ├── ackley_surface_solution.png # from main.py
+        ├── run_summary.json            # from main.py
+        └── detailed/                   # from generate_detailed_report.py — see below
+            ├── tables/gen_000.csv ... gen_100.csv
+            ├── plots/gen_000.png ... gen_100.png
+            ├── evolution.gif
+            ├── GA_Detailed_Report.xlsx
+            ├── population_all_generations.csv
+            ├── events_all_generations.csv
+            └── summary_all_generations.csv
 ```
 
 ## How to Run
@@ -73,6 +82,28 @@ This will:
 cd src
 python3 -m pytest test_ga.py -v
 ```
+
+## Full Per-Generation Detail (for showing the instructor every step)
+
+`main.py` only saves the final convergence curve and summary. If you want to see **every generation's population as a table, plus a picture of the population on the Ackley surface for every single generation** — exactly what an instructor will want to see step-by-step — run:
+
+```bash
+cd src
+pip install -r requirements.txt   # now also includes pandas, openpyxl, imageio
+python3 generate_detailed_report.py
+```
+
+This produces, inside `src/output/detailed/`:
+
+| Output | What it shows |
+| --- | --- |
+| `tables/gen_000.csv` … `gen_100.csv` | One CSV table per generation (individual #, x1, x2, fitness, rank, elite flag). Generation 0 is the initial random population. |
+| `plots/gen_000.png` … `gen_100.png` | One plot per generation: every individual plotted on the Ackley contour surface, the elite (best) individual highlighted as an orange diamond, the true minimum marked with a white star. |
+| `evolution.gif` | All 101 generation plots stitched into an animation — great for a live demo of the population converging onto (0,0). |
+| `GA_Detailed_Report.xlsx` | One workbook, three sheets: **Summary** (best/mean/worst/std fitness, #crossovers, #mutations per generation), **Population** (every individual, every generation, long-format — filter/pivot by the `generation` column in Excel to see any single iteration's table), **Events** (every selection pair, whether crossover fired, and any mutation applied to each child, for every generation). |
+| `population_all_generations.csv`, `events_all_generations.csv`, `summary_all_generations.csv` | Same three tables as the Excel sheets, as plain CSVs. |
+
+This is a separate, optional run from `main.py` — it re-runs the GA (same settings, same seed) with full logging switched on (`GeneticAlgorithm.run(log_details=True)`), which is disabled by default in `main.py` to keep the everyday run lightweight.
 
 ## Example Result
 
