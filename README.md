@@ -62,6 +62,7 @@ This will:
 2. Save two plots to `src/output/`:
    - `convergence_curve.png` — best & mean fitness per generation
    - `ackley_surface_solution.png` — GA's best solution plotted on the Ackley surface, next to the true global minimum
+    The convergence graph is also opened automatically in the system's default image viewer.
 3. Run a short comparison against a classical optimizer (`scipy.optimize.minimize`, Nelder-Mead) starting from the same kind of point a GA individual might.
 4. Run two reduced-generation GA runs (20 and 25 generations) for reference, as suggested in the assignment notes.
 5. Save everything (settings, best solution, comparisons) to `src/output/run_summary.json`.

@@ -11,6 +11,8 @@ GA run (20/25 generations) for reference.
 
 import json
 import os
+from pathlib import Path
+import webbrowser
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -50,9 +52,20 @@ def run_main_ga(seed: int = 42):
 
 
 def plot_convergence(result, path):
+    generations = np.arange(1, result.generations_run + 1)
     plt.figure(figsize=(8, 5))
-    plt.plot(result.history_best, label="Best fitness (so far)", linewidth=2)
-    plt.plot(result.history_mean, label="Mean population fitness", alpha=0.6)
+    plt.plot(
+        generations,
+        result.history_best,
+        label="Best fitness (so far)",
+        linewidth=2,
+    )
+    plt.plot(
+        generations,
+        result.history_mean,
+        label="Mean population fitness",
+        alpha=0.6,
+    )
     plt.axhline(
         0, color="gray", linestyle="--", linewidth=1, label="Global minimum (0)"
     )
@@ -143,6 +156,7 @@ def main():
     plot_convergence(result, convergence_path)
     plot_surface_with_solution(result, surface_path)
     print(f"\nSaved plots:\n  {convergence_path}\n  {surface_path}")
+    webbrowser.open(Path(convergence_path).resolve().as_uri())
 
     classical = classical_comparison()
     reduced = reduced_generation_ga_runs()
