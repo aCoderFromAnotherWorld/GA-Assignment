@@ -2,3 +2,6 @@ numpy
 matplotlib
 scipy
 pytest
+pandas
+openpyxl
+imageio

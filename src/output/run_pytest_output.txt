@@ -1,0 +1,16 @@
+======= test session starts =======
+platform darwin -- Python 3.13.15, pytest-9.0.2, pluggy-1.6.0 -- python3.13
+cachedir: .pytest_cache
+rootdir: .../GA-Assignment/src
+plugins: anyio-4.12.1, asyncio-1.4.0, cov-7.0.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 6 items                                                                                                                                   
+
+test_ga.py::test_ackley_global_minimum_is_zero_at_origin PASSED       [ 16%]
+test_ga.py::test_ackley_is_positive_away_from_origin PASSED           [ 33%]
+test_ga.py::test_ackley_vec_matches_scalar PASSED                     [ 50%]
+test_ga.py::test_ga_improves_over_generations PASSED                  [ 66%]
+test_ga.py::test_ga_converges_close_to_zero PASSED                    [ 83%]
+test_ga.py::test_chromosomes_stay_within_bounds PASSED                [100%]
+
+======== 6 passed in 0.41s ========

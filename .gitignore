@@ -1,10 +1,10 @@
 **/.DS_Store
-Temp/
-Draft/
-Test/
+**/Temp/
+**/Draft/
+**/Test/
 *.pyc
-__pycache__/
-.pytest_cache/
+**/__pycache__/
+**/.pytest_cache/
 *.egg-info/
 venv/
 .venv/

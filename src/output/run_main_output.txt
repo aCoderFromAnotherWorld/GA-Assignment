@@ -1,0 +1,33 @@
+======================================================================
+Genetic Algorithm — 2D Ackley Function Global Minimum
+======================================================================
+Gen   1 | best f = 3.692009 | x* = (-0.5384, -0.2430) | mean f = 7.9823
+Gen  10 | best f = 1.900981 | x* = ( 0.0962, -0.2430) | mean f = 3.2986
+Gen  20 | best f = 0.065981 | x* = (-0.0018,  0.0196) | mean f = 0.4422
+Gen  30 | best f = 0.065981 | x* = (-0.0018,  0.0196) | mean f = 0.2910
+Gen  40 | best f = 0.065981 | x* = (-0.0018,  0.0196) | mean f = 0.2164
+Gen  50 | best f = 0.051162 | x* = (-0.0018,  0.0156) | mean f = 0.2076
+Gen  60 | best f = 0.051162 | x* = (-0.0018,  0.0156) | mean f = 0.1598
+Gen  70 | best f = 0.040843 | x* = (-0.0018, -0.0127) | mean f = 0.1347
+Gen  80 | best f = 0.015713 | x* = (-0.0018,  0.0050) | mean f = 0.3495
+Gen  90 | best f = 0.015713 | x* = (-0.0018,  0.0050) | mean f = 0.1502
+Gen 100 | best f = 0.015713 | x* = (-0.0018,  0.0050) | mean f = 0.0837
+----------------------------------------------------------------------
+Finished after 100 generation(s) (reached max generations)
+Best solution found: x1 = -0.001847, x2 = 0.004959
+Best fitness f(x1, x2) = 0.01571263  (global minimum is 0 at (0,0))
+======================================================================
+
+Saved plots:
+  .../GA-Assignment/src/output/convergence_curve.png
+  .../GA-Assignment/src/output/ackley_surface_solution.png
+
+Classical optimizer comparison (scipy.optimize.minimize, Nelder-Mead)
+  Start point:       x0 = (4.0, -4.0)
+  Classical result:  x* = (3.983079, -3.983104), f(x*) = 10.99826214
+
+Reduced-generation GA runs (for comparison)
+   20 generations -> best f = 0.06598133, x* = (-0.0018, 0.0196)
+   25 generations -> best f = 0.06598133, x* = (-0.0018, 0.0196)
+
+Saved run summary: .../GA-Assignment/src/output/run_summary.json

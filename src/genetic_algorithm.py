@@ -46,6 +46,16 @@ class GAResult:
     )  # mean fitness per generation
     generations_run: int = 0
     converged: bool = False
+    # Only populated when GeneticAlgorithm.run(log_details=True) is used.
+    population_log: list[dict] = field(
+        default_factory=list
+    )  # one row per individual per generation
+    events_log: list[dict] = field(
+        default_factory=list
+    )  # one row per selection/crossover/mutation event
+    summary_log: list[dict] = field(
+        default_factory=list
+    )  # one row per generation (stats)
 
 
 class GeneticAlgorithm:
@@ -113,17 +123,51 @@ class GeneticAlgorithm:
             chromosome[gene_idx] = np.clip(chromosome[gene_idx], low, high)
         return chromosome
 
+    # ------------------------------------------------------- detail logging
+    def _log_population(
+        self,
+        population_log: list,
+        generation: int,
+        population: np.ndarray,
+        fitness: np.ndarray,
+        n_elite: int,
+    ) -> None:
+        """Append one row per individual (already sorted ascending) to population_log."""
+        for rank, (chrom, fit) in enumerate(zip(population, fitness), start=1):
+            population_log.append(
+                {
+                    "generation": generation,
+                    "individual": rank,
+                    "x1": float(chrom[0]),
+                    "x2": float(chrom[1]),
+                    "fitness": float(fit),
+                    "rank": rank,
+                    "is_elite": rank <= n_elite,
+                }
+            )
+
     # --------------------------------------------------------------- run
-    def run(self, verbose: bool = False) -> GAResult:
+    def run(self, verbose: bool = False, log_details: bool = False) -> GAResult:
         cfg = self.cfg
         population = self._init_population()
         fitness = self.fitness_fn(population)
 
         history_best, history_mean = [], []
+        population_log: list[dict] = []
+        events_log: list[dict] = []
+        summary_log: list[dict] = []
+
         best_chromosome = population[np.argmin(fitness)].copy()
         best_fitness = fitness.min()
         converged = False
         gen = 0
+
+        if log_details:
+            # Generation 0 = the initial random population, before any evolution.
+            order0 = np.argsort(fitness)
+            self._log_population(
+                population_log, 0, population[order0], fitness[order0], 0
+            )
 
         for gen in range(1, cfg.generations + 1):
             # 1. Sort ascending (best/lowest Ackley value first)
@@ -136,11 +180,62 @@ class GeneticAlgorithm:
 
             # 3. Selection + 4. Crossover + 5. Mutation -> build offspring
             offspring = []
+            pair_id = 0
+            n_crossovers = 0
+            n_mutations = 0
             while len(offspring) < cfg.pop_size - cfg.elitism:
+                pair_id += 1
                 p1, p2 = self._roulette_wheel_select(population, fitness, 2)
-                c1, c2 = self._one_point_crossover(p1, p2)
+                crossover_applied = self.rng.random() < cfg.pc
+                if crossover_applied:
+                    c1 = np.array([p1[0], p2[1]])
+                    c2 = np.array([p2[0], p1[1]])
+                else:
+                    c1, c2 = p1.copy(), p2.copy()
+                n_crossovers += int(crossover_applied)
+
+                c1_pre = c1.copy()
+                c2_pre = c2.copy()
                 c1 = self._mutate(c1)
                 c2 = self._mutate(c2)
+                c1_mutated = not np.array_equal(c1, c1_pre)
+                c2_mutated = not np.array_equal(c2, c2_pre)
+                n_mutations += int(c1_mutated) + int(c2_mutated)
+
+                if log_details:
+
+                    def _mut_gene(pre, post):
+                        if not np.array_equal(pre, post):
+                            g = int(np.argmax(np.abs(post - pre)))
+                            return g, float(post[g] - pre[g])
+                        return None, None
+
+                    c1_gene, c1_delta = _mut_gene(c1_pre, c1)
+                    c2_gene, c2_delta = _mut_gene(c2_pre, c2)
+                    events_log.append(
+                        {
+                            "generation": gen,
+                            "pair_id": pair_id,
+                            "parent1_x1": float(p1[0]),
+                            "parent1_x2": float(p1[1]),
+                            "parent2_x1": float(p2[0]),
+                            "parent2_x2": float(p2[1]),
+                            "crossover_applied": crossover_applied,
+                            "child1_x1_before_mutation": float(c1_pre[0]),
+                            "child1_x2_before_mutation": float(c1_pre[1]),
+                            "child1_mutated_gene": c1_gene,
+                            "child1_mutation_delta": c1_delta,
+                            "child1_x1": float(c1[0]),
+                            "child1_x2": float(c1[1]),
+                            "child2_x1_before_mutation": float(c2_pre[0]),
+                            "child2_x2_before_mutation": float(c2_pre[1]),
+                            "child2_mutated_gene": c2_gene,
+                            "child2_mutation_delta": c2_delta,
+                            "child2_x1": float(c2[0]),
+                            "child2_x2": float(c2[1]),
+                        }
+                    )
+
                 offspring.append(c1)
                 if len(offspring) < cfg.pop_size - cfg.elitism:
                     offspring.append(c2)
@@ -157,6 +252,30 @@ class GeneticAlgorithm:
 
             history_best.append(best_fitness)
             history_mean.append(fitness.mean())
+
+            if log_details:
+                order_after = np.argsort(fitness)
+                self._log_population(
+                    population_log,
+                    gen,
+                    population[order_after],
+                    fitness[order_after],
+                    cfg.elitism,
+                )
+                summary_log.append(
+                    {
+                        "generation": gen,
+                        "best_fitness": float(fitness[order_after][0]),
+                        "mean_fitness": float(fitness.mean()),
+                        "worst_fitness": float(fitness.max()),
+                        "std_fitness": float(fitness.std()),
+                        "best_x1": float(population[order_after][0][0]),
+                        "best_x2": float(population[order_after][0][1]),
+                        "num_crossovers": n_crossovers,
+                        "num_mutations": n_mutations,
+                        "best_fitness_so_far": float(best_fitness),
+                    }
+                )
 
             if verbose and (gen % 10 == 0 or gen == 1):
                 print(
@@ -177,4 +296,7 @@ class GeneticAlgorithm:
             history_mean=history_mean,
             generations_run=gen,
             converged=converged,
+            population_log=population_log,
+            events_log=events_log,
+            summary_log=summary_log,
         )
